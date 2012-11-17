@@ -1,0 +1,238 @@
+package com.jeter.coveredcallcalc;
+
+import android.app.Activity;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.Calendar;
+import java.util.Date;
+
+public class CoveredCallCalc extends Activity
+{
+    private TextView profitView;
+    private TextView returnView;
+    private TextView calledProfitView;
+    private TextView calledReturnView;
+    private double stockPrice = 0;
+    private double strikePrice = 0;
+    private double premium = 0;
+    private double callFees = 0;
+    private double stockFees = 0;
+    private int contracts = 1;
+//TODO: today should be refreshed more frequently than only when app is instantiated
+//perhaps remove variable & just make necessary calls during calculations
+    private long today = (new Date()).getTime();
+    private long callDate = today;
+
+    /** Called when the activity is first created. */
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+	  setContentView(R.layout.main);
+
+	Button calcButton = (Button)findViewById(R.id.calc_button);
+	profitView = (TextView)findViewById(R.id.call_profit);
+	returnView = (TextView)findViewById(R.id.call_return);
+	calledProfitView = (TextView)findViewById(R.id.called_profit);
+	calledReturnView = (TextView)findViewById(R.id.called_return);
+        final SharedPreferences commissions = getPreferences(0);
+
+	final EditText stockPriceText = (EditText)findViewById(R.id.stock_price);
+	final EditText callCommText = (EditText)findViewById(R.id.call_commission);
+	final EditText stockCommText = (EditText)findViewById(R.id.stock_commission);
+	final EditText strikePriceText = (EditText)findViewById(R.id.strike_price);
+	final EditText premiumText = (EditText)findViewById(R.id.premium);
+	final EditText contractsText = (EditText)findViewById(R.id.contracts);
+	final Spinner dateSpinner = (Spinner)findViewById(R.id.date_spinner);
+
+	//Spinner functionality & callDate setting:
+	ArrayAdapter<CharSequence> dateAdapter = new ArrayAdapter<CharSequence> (this, android.R.layout.simple_spinner_item);
+	dateAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+	populateDateSpinner(today, dateAdapter);
+	dateSpinner.setAdapter(dateAdapter);
+        dateSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
+            public void onItemSelected(AdapterView<?> parent, View v, int pos, long row) {
+		calcCallDate(pos);
+//TODO: should display the calculated expiration date either in Toast or in layout?
+//Toast.makeText(getBaseContext(), new Date(callDate).toString(), Toast.LENGTH_LONG).show(); 
+            }
+            public void onNothingSelected(AdapterView<?> parent) {
+		//do nothing
+	    }
+        });
+
+	callCommText.setText(commissions.getString("CALL_FEES", ""));
+	stockCommText.setText(commissions.getString("STOCK_FEES", ""));
+
+	calcButton.setOnClickListener(new Button.OnClickListener() {
+	    public void onClick (View v) {
+	      try {
+		stockPrice = Double.parseDouble(stockPriceText.getText().toString());
+		stockPriceText.setText(round(stockPrice));
+	      } catch(NumberFormatException e) {stockPrice = 0;}
+		  if (stockPrice <= 0) {
+		      Toast assertToast = Toast.makeText(getApplicationContext(), "Stock Price must be greater than $0.00", Toast.LENGTH_LONG);
+		      assertToast.show();
+		      return;
+		  }
+	      try {
+		strikePrice = Double.parseDouble(strikePriceText.getText().toString());
+		strikePriceText.setText(round(strikePrice));
+	      } catch(NumberFormatException e) {strikePrice = 0;}
+		  if (strikePrice <= 0) {
+		      Toast assertToast = Toast.makeText(getApplicationContext(), "Call Strike Price must be greater than $0.00", Toast.LENGTH_LONG);
+		      assertToast.show();
+		      return;
+		  }
+	      try {
+		premium = Double.parseDouble(premiumText.getText().toString());
+		premiumText.setText(round(premium));
+	      } catch(NumberFormatException e) {premium = 0;}
+		  if (premium <= 0) {
+		      Toast assertToast = Toast.makeText(getApplicationContext(), "Premium must be greater than $0.00", Toast.LENGTH_LONG);
+		      assertToast.show();
+		      return;
+		  }
+	      try {
+		contracts = Integer.parseInt(contractsText.getText().toString());
+	      } catch(NumberFormatException e) {contracts = 1;}
+		  if (!(contracts > 0)) {
+		      Toast assertToast = Toast.makeText(getApplicationContext(), "Number of contracts must be at least 1", Toast.LENGTH_LONG);
+		      assertToast.show();
+		      return;
+		  }
+	      try {
+		callFees = Double.parseDouble(callCommText.getText().toString());
+		callCommText.setText(round(callFees));
+	      } catch(NumberFormatException e) {callFees = 0;}
+	      try {
+		stockFees = Double.parseDouble(stockCommText.getText().toString());
+		stockCommText.setText(round(stockFees));
+	      } catch(NumberFormatException e) {stockFees = 0;}
+
+	      if (!(callDate > today)) {
+		  Toast assertToast = Toast.makeText(getApplicationContext(), "Call date must be in the Future", Toast.LENGTH_LONG);
+		  assertToast.show();
+		  return;
+	      }
+
+	      // save typically static data to persist through sessions
+	      SharedPreferences.Editor commEditor = commissions.edit();
+	      commEditor.putString("CALL_FEES", callCommText.getText().toString());
+	      commEditor.putString("STOCK_FEES", stockCommText.getText().toString());
+	      commEditor.commit();
+
+//? replace "today" with (Calendar.getInstance).getTimeInMillis()
+		long daysToExpire = (callDate - today)/(24 * 60 * 60 * 1000);
+		double income = (premium*contracts*100)-callFees;
+		double annualizedReturn = (income/(stockPrice*contracts*100))*100*(365.0/daysToExpire);
+
+		profitView.setText("Net Covered Call Income: $" + round(income));
+		returnView.setText("Annualized Return: " + round(annualizedReturn) + "%");
+
+		income = ((strikePrice - stockPrice)*contracts*100) + income - stockFees;
+		annualizedReturn = (income/(stockPrice*100*contracts))*100*(365.0/daysToExpire);
+
+		calledProfitView.setText("Total Profit, if called: $" + round(income));
+		calledReturnView.setText("Annualized Return, if called: " + round(annualizedReturn) + "%");
+
+//TODO: "setBackground" doesn't exist - not sure how to change color
+//		if (callIncome < 0) {profitView.setBackground("aa0000"); returnView.setBackground("aa0000");}
+	    }
+	});
+    }
+
+    private String round(Double d) {
+	Boolean negative = false;
+	if (d < 0) {
+	    negative = true;
+	    d *= -1;
+	}
+
+	int a, b;
+	d += .005;
+	a = d.intValue();
+	d = (d - a) * 100;
+
+	b = d.intValue();
+	
+	if (negative) {
+	    if (b < 10)
+		return "-" + a + ".0" + b;
+	    else
+		return "-" + a + "." + b;
+	} else {
+	    if (b < 10)
+		return a + ".0" + b;
+	    else
+		return a + "." + b;
+	}
+    }
+
+//? remove "long today, "
+    private void populateDateSpinner(long today, ArrayAdapter dateArray) {
+	Calendar todaysDate = Calendar.getInstance();
+//? todaysDate.getTimeInMillis();
+	todaysDate.setTimeInMillis(today);
+	int month = todaysDate.get(Calendar.MONTH);
+	int year = todaysDate.get(Calendar.YEAR);
+
+	for (int i=0; i<24; i++) {
+	    switch (month) {
+		case 0:
+		  year += 1;
+		  dateArray.add("January, " + year); break;
+		case 1:
+		  dateArray.add("February, " + year); break;
+		case 2:
+		  dateArray.add("March, " + year); break;
+		case 3:
+		  dateArray.add("April, " + year); break;
+		case 4:
+		  dateArray.add("May, " + year); break;
+		case 5:
+		  dateArray.add("June, " + year); break;
+		case 6:
+		  dateArray.add("July, " + year); break;
+		case 7:
+		  dateArray.add("August, " + year); break;
+		case 8:
+		  dateArray.add("September, " + year); break;
+		case 9:
+		  dateArray.add("October, " + year); break;
+		case 10:
+		  dateArray.add("November, " + year); break;
+		case 11:
+		  dateArray.add("December, " + year); month = -1;
+	    }
+	    month += 1;
+	}
+    }
+
+    void calcCallDate(int pos) {
+	Calendar resultDate = Calendar.getInstance();
+//? resultDate.getTimeInMillis();
+	resultDate.setTimeInMillis(today);
+
+	for (int i = 0; i < pos; i++) {
+	    if (resultDate.get(Calendar.MONTH) == Calendar.DECEMBER)
+		resultDate.roll(Calendar.YEAR, true);
+	    resultDate.roll(Calendar.MONTH, true);
+	}
+	resultDate.set(Calendar.DAY_OF_MONTH, 15);
+	
+	while (Calendar.FRIDAY != resultDate.get(Calendar.DAY_OF_WEEK)) {
+	    resultDate.roll(Calendar.DAY_OF_MONTH, true);
+	}
+	callDate = resultDate.getTimeInMillis();
+    }
+}

@@ -1,0 +1,58 @@
+/home/luke/android/apks/coveredcallcalc/bin/CoveredCallCalc.apk
+
+/home/luke/android/apks/coveredcallcalc/screen2.jpeg;/home/luke/android/apks/coveredcallcalc/screen1.jpeg
+
+Covered Call Calculator
+
+This is a simple calculator that has been designed to calculate the annualized return when selling covered call options. It also gives the net profit and return if a call option is exercised.<br/>This tool will be useless if you are unfamiliar with with <a href="http://en.wikipedia.org/wiki/Covered_call">covered calls</a>.
+
+Easily calculate net profit and annualized return for covered call transactions!
+
+Applications;Finance;free
+
+On; true
+
+http://home.comcast.net/~lajeter/android/cccalc.html
+
+luke.jeter@gmail.com
+-------------------------------------------
+Covered Call Calculator, 0.1
+
+Description: This is a simple calculator that can be used to calculate the annualized return for selling covered call options based on the price of the underlying stock. It also calculates the net profit (or loss) and annualized return in the event that call option is assigned and forces a sale of the underlying security.
+
+Known bug: Annualized returns are not correctly calculated when the expiration date is greater than 1 year from today.
+
+The fields:
+	Stock Price - This is the current (or initial, if you prefer) stock price of that is used as the basis of the return calculations.
+	Call Strike Price - This is the strike price of the call option that you are considering to sell short. Typically this will be higher than the current Stock Price.
+Call Date - This is the expiration date of the contract. 
+Call Premium - This is the current, or target, price of the option. Premiums are typically quoted, and therefore represented in this application, on a per-share basis.
+Number of Contracts - This is the number of contracts being sold. The application assumes that each contract represents one round-lot (100 shares of stock). [defaults to "1"]
+Commission and Fees - This is the amount paid for selling the option contract(s). Because this often remains unchanged, entries in this field will persist until changed.
+Commission, if option is assigned - This is the amount charged to sell the underlying shares of stock if the Stock Price exceeds the Strike Price and the call option is exercised and assigned. Because this often remains unchanged, entries in this field will persist until changed.
+Calculate (button) - Push this to crunch the numbers.
+Call income - This is the net amount received from selling the number of call option contracts at the specified Call Premium minus the Commission and Fees.
+Annualized Return - The annualized return is based on dividing the total return by the number of days between today and the Call Date, then multiplying the result by 365. This return will be achieved based on the assumption that soon after each call date (assuming the contract expires worthless) a similar contract will be sold and that this process will be repeated for the duration of one year.
+Total Profit, if called - This is the net amount received from the sale of the call option contract(s) and the underlying stock, minus the combined commissions and fees.
+Annualized Return, if called - This is the annualized return, using the Stock Price as the base, for the sale of the option contract(s) and shares of stock for the period equal to the Call Date minus today's date.
+
+
+Current plans for future releases (as of 7/1/10):
+0.2:
+Create a unique icon
+Replace manually-entered Expiration Date field with a drop down list of the next 24 month and year combinations; when selected, calculate and populate the correct "month day, year"
+Improve the display of the results based on expected feedback
+
+1.0:
+Allow internet access of publicly-available stock and option price information
+Include a field for Ticker Symbol and auto-populate the current stock price
+?Create the ability to search for options based on the provided ticker symbol
+*Possibly change to an ad-supported free app
+
+~1.5
+Populate Expiration Month-Year with only those that are available for the entered ticker symbol
+Auto-populate the current call option bid price
+Allow the ability to save scenarios
+Add more detail for pre-defined commission calculations (such as $7 + $1.25/contract)
+*Possibly change to a paid app
+

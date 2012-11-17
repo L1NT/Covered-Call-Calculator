@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:padding="10pt"
+    >
+<ScrollView 
+  android:layout_height="wrap_content"
+  android:layout_width="fill_parent"
+  android:layout_weight="1"
+  >
+<LinearLayout
+  android:orientation="vertical"
+  android:layout_width="fill_parent"
+  android:layout_height="fill_parent"
+  >
+  
+  <!-- above is to create auto-expanding scroll bar - below is actual layout -->
+    <LinearLayout
+      android:orientation="horizontal"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:layout_weight="1"
+      >
+      <TextView
+	  android:layout_width="0px" 
+	  android:layout_height="wrap_content"
+	  android:text="Stock Price:"
+	  android:layout_weight=".6"
+	  />
+      <TextView
+	  android:layout_width="0px"
+	  android:layout_height="wrap_content"
+	  android:text="$"
+	  android:layout_weight=".05"
+	  />
+      <EditText
+	  android:id="@+id/stock_price"
+	  android:inputType="numberDecimal"
+	  android:layout_width="0px"
+	  android:layout_height="wrap_content"
+	  android:hint="0.00"
+	  android:layout_weight=".35"
+	  >
+	  <requestFocus />
+	  </EditText>
+    </LinearLayout>
+    <LinearLayout
+      android:orientation="horizontal"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:layout_weight="1"
+      >
+      <TextView  
+	  android:layout_width="0px" 
+	  android:layout_height="wrap_content"
+	  android:text="Call Strike Price:"
+	  android:layout_weight=".6"
+	  />
+      <TextView
+	  android:layout_width="0px"
+	  android:layout_height="wrap_content"
+	  android:text="$"
+	  android:layout_weight=".05"
+	  />
+      <EditText
+	  android:id="@+id/strike_price"
+	  android:inputType="numberDecimal"
+	  android:layout_width="0px"
+	  android:layout_height="wrap_content"
+	  android:hint="0.00"
+	  android:layout_weight=".35"
+	  />
+    </LinearLayout>
+    <LinearLayout
+      android:orientation="horizontal"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:layout_weight="1"
+      >
+      <TextView  
+	  android:layout_width="0px" 
+	  android:layout_height="wrap_content"
+	  android:text="Call Date:"
+	  android:layout_weight=".35"
+	  />
+      <Spinner 
+	  android:id="@+id/date_spinner"
+	  android:layout_width="0px"
+	  android:layout_height="wrap_content"
+	  android:drawSelectorOnTop="true"
+	  android:prompt="@string/default_date"
+	  android:layout_weight=".65"
+	  />
+      <!--EditText
+	  android:id="@+id/call_date"
+	  android:inputType="date"
+	  android:layout_width="0px"
+	  android:layout_height="wrap_content"
+	  android:hint="MM/DD/YYYY"
+	  android:layout_weight=".5"
+	  /-->
+<!-- TODO: remove text line above when date selector is created -->
+    </LinearLayout>
+    <LinearLayout
+      android:orientation="horizontal"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:layout_weight="1"
+      >
+      <TextView  
+	  android:layout_width="0px" 
+	  android:layout_height="wrap_content"
+	  android:text="Call Premium:"
+	  android:layout_weight=".6"
+	  />
+      <TextView
+	  android:layout_width="0px"
+	  android:layout_height="wrap_content"
+	  android:text="$"
+	  android:layout_weight=".05"
+	  />
+      <EditText
+	  android:id="@+id/premium"
+	  android:inputType="numberDecimal"
+	  android:layout_width="0px"
+	  android:layout_height="wrap_content"
+	  android:hint="0.00"
+	  android:layout_weight=".35"
+	  />
+    </LinearLayout>
+    <LinearLayout
+      android:orientation="horizontal"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:layout_weight="1"
+      >
+      <TextView  
+	  android:layout_width="0px" 
+	  android:layout_height="wrap_content"
+	  android:text="Number of Contracts:"
+	  android:layout_weight=".75"
+	  />
+      <EditText
+	  android:id="@+id/contracts"
+	  android:inputType="number"
+	  android:layout_width="0px"
+	  android:layout_height="wrap_content"
+	  android:hint="1"
+	  android:layout_weight=".25"
+	  />
+    </LinearLayout>
+    <LinearLayout
+      android:orientation="horizontal"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:layout_weight="1"
+      >
+      <TextView  
+	  android:layout_width="0px" 
+	  android:layout_height="wrap_content"
+	  android:text="Commission and Fees for sale of option(s):"
+	  android:layout_weight=".6"
+	  />
+      <TextView
+	  android:layout_width="0px"
+	  android:layout_height="wrap_content"
+	  android:text="$"
+	  android:layout_weight=".05"
+	  />
+      <EditText
+	  android:id="@+id/call_commission"
+	  android:inputType="numberDecimal"
+	  android:layout_width="0px"
+	  android:layout_height="wrap_content"
+	  android:hint="0.00"
+	  android:layout_weight=".35"
+	  />
+    </LinearLayout>
+    <LinearLayout
+      android:orientation="horizontal"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:layout_weight="1"
+      >
+      <TextView
+	  android:layout_width="0px"
+	  android:layout_height="wrap_content"
+	  android:text="Commission for sale of underlying stock:"
+	  android:layout_weight=".6"
+	  />
+      <TextView
+	  android:layout_width="0px"
+	  android:layout_height="wrap_content"
+	  android:text="$"
+	  android:layout_weight=".05"
+	  />
+      <EditText
+	  android:id="@+id/stock_commission"
+	  android:inputType="numberDecimal"
+	  android:layout_width="0px"
+	  android:layout_height="wrap_content"
+	  android:hint="0.00"
+	  android:layout_weight=".35"
+	  />
+    </LinearLayout>
+
+<!-- Calculate button -->
+    <Button
+	android:id="@+id/calc_button"
+	android:layout_width="200px"
+	android:layout_height="wrap_content"
+	android:layout_gravity="center"
+	android:text="Calculate"
+	/>
+
+<!-- Results Display -->
+    <LinearLayout
+      android:orientation="horizontal"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:background="#00aa00"
+      android:layout_weight="1"
+      >
+      <TextView
+	  android:id="@+id/call_profit"
+	  android:layout_width="fill_parent" 
+	  android:layout_height="wrap_content"
+	  android:layout_weight=".5"
+	  android:text="call income"
+	  />
+      <TextView
+	  android:id="@+id/call_return"
+	  android:layout_width="fill_parent" 
+	  android:layout_height="wrap_content"
+	  android:layout_weight=".5"
+	  android:text="annualized return"
+	  />
+    </LinearLayout>
+
+    <LinearLayout
+      android:orientation="horizontal"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:background="#0000aa"
+      android:layout_weight="1"
+      >
+      <TextView
+	  android:id="@+id/called_profit"
+	  android:layout_width="fill_parent" 
+	  android:layout_height="wrap_content"
+	  android:layout_weight=".5"
+	  android:text="total income"
+	  />
+      <TextView
+	  android:id="@+id/called_return"
+	  android:layout_width="fill_parent" 
+	  android:layout_height="wrap_content"
+	  android:layout_weight=".5"
+	  android:text="total annualized return"
+	  />
+    </LinearLayout>
+    
+<!-- add menu items here? "save" & "exit"? -->
+</LinearLayout>
+</ScrollView>
+</LinearLayout>
+
