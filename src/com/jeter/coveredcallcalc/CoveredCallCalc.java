@@ -228,9 +228,9 @@ public class CoveredCallCalc extends Activity
 		resultDate.roll(Calendar.YEAR, true);
 	    resultDate.roll(Calendar.MONTH, true);
 	}
-	resultDate.set(Calendar.DAY_OF_MONTH, 15);
+	resultDate.set(Calendar.DAY_OF_MONTH, 16);
 	
-	while (Calendar.FRIDAY != resultDate.get(Calendar.DAY_OF_WEEK)) {
+	while (Calendar.SATURDAY != resultDate.get(Calendar.DAY_OF_WEEK)) {
 	    resultDate.roll(Calendar.DAY_OF_MONTH, true);
 	}
 	callDate = resultDate.getTimeInMillis();
